@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
-import { userController } from "./controllers/index.js";
-import { registerValidator, loginValidator } from "./validation.js";
+import { userController, postController } from "./controllers/index.js";
+import { registerValidator, loginValidator, postValidator } from "./validation.js";
 import { validationErrors, checkAuth } from "./utils/index.js";
 
 //link mongoDB
@@ -20,6 +20,14 @@ app.use(express.json());
 app.post('/auth/register', registerValidator, validationErrors, userController.register);
 app.post('/auth/login', loginValidator, validationErrors, userController.login)
 app.get('/auth/me', checkAuth, userController.getMe);
+
+
+
+//create, update and delete articles 
+app.post('/posts', checkAuth, postValidator, validationErrors, postController.createPost);
+app.patch('/posts/:id', checkAuth, postValidator, validationErrors, postController.updatePost);
+app.delete('/posts/:id', checkAuth, postController.deletePost);
+
 
 
 //started at localhost:4000

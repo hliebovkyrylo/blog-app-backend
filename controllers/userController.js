@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import userModel from "../models/user.js";
 
+//user registration
 export const register = async (req, res) => {
     try {
         const password = req.body.password;
@@ -42,11 +43,12 @@ export const register = async (req, res) => {
     };
 };
 
+//user login
 export const login = async (req, res) => {
     try {
         const user = await userModel.findOne({ email: req.body.email });
 
-        if (!user) {
+        if (!user) { //user presence check
             res.status(400).json({
                 message: "User is not found"
             });
@@ -54,7 +56,7 @@ export const login = async (req, res) => {
 
         const correctPass = await bcrypt.compare(req.body.password, user._doc.passwordHash);
 
-        if (!correctPass) {
+        if (!correctPass) { //password check
             res.status(400).json({
                 message: "Wrong email or password"
             });
@@ -86,6 +88,7 @@ export const login = async (req, res) => {
     };
 };
 
+//information about user
 export const getMe = async (req, res) => {
     try {
         const user = await userModel.findById(req.userID);
