@@ -88,7 +88,7 @@ export const deletePost = async (req, res) => {
 //get all posts
 export const getAll = async (req, res) => {
     try {
-        const posts = await postModel.find().populate('user').exec;
+        const posts = await postModel.find().populate('user').exec();
 
         res.json(posts);
 
@@ -105,18 +105,12 @@ export const getOne = async (req, res) => {
     try {
         const postId = req.params.id;
 
-        postModel.findOneAndUpdate({
-            _id: postId
-        }, {
-            returnDocument: 'after',
+        postModel.findOne(
+            {
+                _id: postId
+            }
 
-        }, (err, doc) => {
-            if (err) {
-                return res.status(500).json({
-                    message: "failed to return article"
-                });
-            };
-
+        ).then(doc => {
             if (!doc) {
                 return res.status(404).json({
                     message: "Article is not found"
@@ -124,8 +118,7 @@ export const getOne = async (req, res) => {
             };
 
             res.json(doc);
-
-        }).populate('user');
+        })
 
     } catch (err) {
         console.log(err);
