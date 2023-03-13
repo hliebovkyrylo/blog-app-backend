@@ -122,3 +122,20 @@ export const getOne = async (req, res) => {
         });
     };
 };
+
+//tags
+export const getTags = async (req, res) => {
+    try {
+        const posts = await postModel.find().limit(3).exec();
+
+        const tags = posts.map(obj => obj.tag).flat().slice(0, 21);
+
+        res.json(tags);
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            message: "Failed to retrieve article"
+        });
+    }
+};

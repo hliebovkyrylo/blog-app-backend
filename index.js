@@ -32,6 +32,11 @@ app.get('/posts/:id', postController.getOne);
 
 
 
+//tags
+app.get('/tags', postController.getTags);
+
+
+
 //started at localhost:4000
 app.listen(4000, (err) => {
     if (err) {
