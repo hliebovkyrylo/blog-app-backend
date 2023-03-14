@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import { userController, postController } from "./controllers/index.js";
 import { registerValidator, loginValidator, postValidator } from "./validation.js";
 import { validationErrors, checkAuth } from "./utils/index.js";
+import cors from "cors";
+import multer from "multer";
 
 //link mongoDB
 mongoose.set('strictQuery', false);
@@ -34,6 +36,30 @@ app.get('/posts/:id', postController.getOne);
 
 //tags
 app.get('/tags', postController.getTags);
+
+
+
+//upload image
+app.use(cors());
+app.use('/uploadImage', express.static('uploadImage'));
+
+const storage = multer.diskStorage({
+    destination: (_, __, callback) => {
+        callback(null, 'uploadImage');
+    },
+
+    filename: (_, file, callback) => {
+        callback(null, file.originalname);
+    },
+});
+
+const upload = multer({ storage });
+
+app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
+    res.json({
+        url: `/uploadImage/${req.file.originalname}`
+    });
+});
 
 
 
